@@ -1,0 +1,107 @@
+{
+  "manifest_version": 3,
+  "name": "SwarmLink - Federated Alpha Hives",
+  "version": "0.1.0",
+  "description": "Join community hives for collaborative alpha hunting on Solana",
+  "permissions": ["storage", "notifications"],
+  "host_permissions": [
+    "https://federatedalpha.com/*",
+    "https://www.federatedalpha.com/*",
+    "https://dexscreener.com/*",
+    "https://www.dexscreener.com/*",
+    "https://raydium.io/*",
+    "https://www.raydium.io/*",
+    "https://jup.ag/*",
+    "https://www.jup.ag/*",
+    "https://birdeye.so/*",
+    "https://www.birdeye.so/*",
+    "https://pump.fun/*",
+    "https://www.pump.fun/*",
+    "https://gmgn.ai/*",
+    "https://www.gmgn.ai/*",
+    "https://photon-sol.tinyastro.io/*",
+    "https://rugcheck.xyz/*",
+    "https://www.rugcheck.xyz/*",
+    "https://solscan.io/*",
+    "https://www.solscan.io/*",
+    "https://letsbonk.fun/*",
+    "https://www.letsbonk.fun/*",
+    "https://believe.app/*",
+    "https://www.believe.app/*",
+    "https://solana.fm/*",
+    "https://www.solana.fm/*",
+    "https://explorer.solana.com/*",
+    "https://phantom.com/*",
+    "https://www.phantom.com/*",
+    "https://twitter.com/*",
+    "https://www.twitter.com/*",
+    "https://x.com/*",
+    "https://www.x.com/*"
+  ],
+  "action": {
+    "default_popup": "popup-simple.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [{
+    "matches": [
+      "https://federatedalpha.com/*",
+      "https://www.federatedalpha.com/*",
+      "https://dexscreener.com/solana/*",
+      "https://www.dexscreener.com/solana/*",
+      "https://raydium.io/*",
+      "https://www.raydium.io/*",
+      "https://jup.ag/*",
+      "https://www.jup.ag/*",
+      "https://birdeye.so/*",
+      "https://www.birdeye.so/*",
+      "https://pump.fun/*",
+      "https://www.pump.fun/*",
+      "https://gmgn.ai/*",
+      "https://www.gmgn.ai/*",
+      "https://photon-sol.tinyastro.io/*/lp/*",
+      "https://rugcheck.xyz/tokens/*",
+      "https://www.rugcheck.xyz/tokens/*",
+      "https://solscan.io/token/*",
+      "https://www.solscan.io/token/*",
+      "https://letsbonk.fun/coin/*",
+      "https://www.letsbonk.fun/coin/*",
+      "https://believe.app/coin/*",
+      "https://www.believe.app/coin/*",
+      "https://raydium.io/launchpad/token/*",
+      "https://www.raydium.io/launchpad/token/*",
+      "https://solana.fm/address/*",
+      "https://www.solana.fm/address/*",
+      "https://explorer.solana.com/address/*",
+      "https://phantom.com/tokens/solana/*",
+      "https://www.phantom.com/tokens/solana/*",
+      "https://twitter.com/*/status/*",
+      "https://www.twitter.com/*/status/*",
+      "https://x.com/*/status/*",
+      "https://www.x.com/*/status/*"
+    ],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "swarmlink@federatedalpha.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}

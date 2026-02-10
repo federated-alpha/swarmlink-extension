@@ -1,0 +1,22 @@
+{
+  "name": "swarmlink-extension",
+  "version": "0.1.0",
+  "description": "SwarmLink - Community-powered alpha hunting for Solana",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "peerjs": "^1.5.4"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0",
+    "@types/chrome": "^0.0.268",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7"
+  }
+}

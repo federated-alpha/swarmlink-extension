@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwarmLink</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="root">
+    <div class="header">
+      <span class="logo-text">SwarmLink</span>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Swarm Selector -->
+    <div class="active-swarm-bar" id="activeSwarmBar" style="display:none;">
+      <label for="activeSwarmSelect">Broadcasting to:</label>
+      <select id="activeSwarmSelect"></select>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+      <button class="tab active" data-tab="activity">Activity</button>
+      <button class="tab" data-tab="swarms">My Swarms</button>
+    </div>
+
+    <div class="content">
+      <!-- Activity Feed View -->
+      <div id="activity-view" class="tab-content active">
+        <div class="feed-section feed-high">
+          <div class="feed-section-header">
+            <span class="risk-dot risk-high"></span>
+            <span class="feed-section-title">HIGH RISK</span>
+            <span class="feed-count" id="high-count">0</span>
+          </div>
+          <div class="feed-items" id="high-items">
+            <div class="feed-empty">No high risk tokens detected</div>
+          </div>
+        </div>
+
+        <div class="feed-section feed-medium">
+          <div class="feed-section-header">
+            <span class="risk-dot risk-medium"></span>
+            <span class="feed-section-title">MEDIUM RISK</span>
+            <span class="feed-count" id="medium-count">0</span>
+          </div>
+          <div class="feed-items" id="medium-items">
+            <div class="feed-empty">No medium risk tokens detected</div>
+          </div>
+        </div>
+
+        <div class="feed-section feed-low">
+          <div class="feed-section-header">
+            <span class="risk-dot risk-low"></span>
+            <span class="feed-section-title">LOW RISK</span>
+            <span class="feed-count" id="low-count">0</span>
+          </div>
+          <div class="feed-items" id="low-items">
+            <div class="feed-empty">No low risk tokens detected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swarms View -->
+      <div id="swarms-view" class="tab-content" style="display:none;">
+        <div id="swarms-list"></div>
+      </div>
+    </div>
+  </div>
+  <script src="popup-simple.js"></script>
+</body>
+</html>
