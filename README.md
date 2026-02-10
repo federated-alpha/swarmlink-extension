@@ -52,7 +52,7 @@ Only two permissions requested:
 - **`storage`** — Save your swarms and preferences locally
 - **`notifications`** — Alert on high-risk tokens
 
-No `tabs`, `webRequest`, `cookies`, or any elevated access. See [SECURITY.md](SECURITY.md) for full details.
+No `tabs`, `webRequest`, `cookies`, or any elevated access. See [SECURITY.md](SECURITY.md) for full details or read the complete [Security Whitepaper](https://federatedalpha.com/security).
 
 ## How Risk Scoring Works
 
@@ -121,5 +121,6 @@ PRs welcome. If you find a bug or want to add support for a new site:
 ## Links
 
 - Website: [federatedalpha.com](https://federatedalpha.com)
+- Security Whitepaper: [federatedalpha.com/security](https://federatedalpha.com/security)
 - X: [@federatedalpha](https://x.com/federatedalpha)
 - Token: $ALPHA on Solana
