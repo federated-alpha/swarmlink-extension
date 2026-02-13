@@ -3,7 +3,11 @@
   "name": "SwarmLink - Federated Alpha Hives",
   "version": "0.1.0",
   "description": "Join community hives for collaborative alpha hunting on Solana",
-  "permissions": ["storage", "notifications", "alarms"],
+  "permissions": [
+    "storage",
+    "notifications",
+    "alarms"
+  ],
   "host_permissions": [
     "https://federatedalpha.com/*",
     "https://www.federatedalpha.com/*",
@@ -52,46 +56,50 @@
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [{
-    "matches": [
-      "https://federatedalpha.com/*",
-      "https://www.federatedalpha.com/*",
-      "https://dexscreener.com/*",
-      "https://www.dexscreener.com/*",
-      "https://raydium.io/*",
-      "https://www.raydium.io/*",
-      "https://jup.ag/*",
-      "https://www.jup.ag/*",
-      "https://birdeye.so/*",
-      "https://www.birdeye.so/*",
-      "https://pump.fun/*",
-      "https://www.pump.fun/*",
-      "https://gmgn.ai/*",
-      "https://www.gmgn.ai/*",
-      "https://photon-sol.tinyastro.io/*/lp/*",
-      "https://rugcheck.xyz/tokens/*",
-      "https://www.rugcheck.xyz/tokens/*",
-      "https://solscan.io/token/*",
-      "https://www.solscan.io/token/*",
-      "https://letsbonk.fun/coin/*",
-      "https://www.letsbonk.fun/coin/*",
-      "https://believe.app/coin/*",
-      "https://www.believe.app/coin/*",
-      "https://raydium.io/launchpad/token/*",
-      "https://www.raydium.io/launchpad/token/*",
-      "https://solana.fm/address/*",
-      "https://www.solana.fm/address/*",
-      "https://explorer.solana.com/address/*",
-      "https://phantom.com/tokens/solana/*",
-      "https://www.phantom.com/tokens/solana/*",
-      "https://twitter.com/*/status/*",
-      "https://www.twitter.com/*/status/*",
-      "https://x.com/*/status/*",
-      "https://www.x.com/*/status/*"
-    ],
-    "js": ["content.js"],
-    "run_at": "document_end"
-  }],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://federatedalpha.com/*",
+        "https://www.federatedalpha.com/*",
+        "https://dexscreener.com/*",
+        "https://www.dexscreener.com/*",
+        "https://raydium.io/*",
+        "https://www.raydium.io/*",
+        "https://jup.ag/*",
+        "https://www.jup.ag/*",
+        "https://birdeye.so/*",
+        "https://www.birdeye.so/*",
+        "https://pump.fun/*",
+        "https://www.pump.fun/*",
+        "https://gmgn.ai/*",
+        "https://www.gmgn.ai/*",
+        "https://photon-sol.tinyastro.io/*/lp/*",
+        "https://rugcheck.xyz/tokens/*",
+        "https://www.rugcheck.xyz/tokens/*",
+        "https://solscan.io/token/*",
+        "https://www.solscan.io/token/*",
+        "https://letsbonk.fun/coin/*",
+        "https://www.letsbonk.fun/coin/*",
+        "https://believe.app/coin/*",
+        "https://www.believe.app/coin/*",
+        "https://raydium.io/launchpad/token/*",
+        "https://www.raydium.io/launchpad/token/*",
+        "https://solana.fm/address/*",
+        "https://www.solana.fm/address/*",
+        "https://explorer.solana.com/address/*",
+        "https://phantom.com/tokens/solana/*",
+        "https://www.phantom.com/tokens/solana/*",
+        "https://twitter.com/*/status/*",
+        "https://www.twitter.com/*/status/*",
+        "https://x.com/*/status/*",
+        "https://www.x.com/*/status/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
