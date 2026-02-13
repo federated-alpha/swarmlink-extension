@@ -25,13 +25,23 @@
 
     <!-- Tab Bar -->
     <div class="tab-bar">
-      <button class="tab active" data-tab="activity">Activity</button>
+      <button class="tab active" data-tab="activity">My Scans</button>
+      <button class="tab" data-tab="guardian">Guardian</button>
       <button class="tab" data-tab="swarms">My Swarms</button>
     </div>
 
     <div class="content">
       <!-- Activity Feed View -->
       <div id="activity-view" class="tab-content active">
+        <!-- Guardian Alerts (top of feed) -->
+        <div id="feed-alerts" class="feed-alerts-section" style="display:none;">
+          <div class="feed-section-header feed-alerts-header">
+            <span class="feed-section-title feed-alerts-title">GUARDIAN ALERTS</span>
+            <span class="feed-count" id="alerts-count">0</span>
+          </div>
+          <div class="feed-items" id="feed-alerts-items"></div>
+        </div>
+
         <div class="feed-section feed-high">
           <div class="feed-section-header">
             <span class="risk-dot risk-high"></span>
@@ -62,6 +72,35 @@
           </div>
           <div class="feed-items" id="low-items">
             <div class="feed-empty">No low risk tokens detected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guardian View -->
+      <div id="guardian-view" class="tab-content" style="display:none;">
+        <div id="guardian-auth-gate" style="display:none;">
+          <div class="empty-state">
+            <p>Connect your wallet at federatedalpha.com to use Guardian.</p>
+            <button class="btn btn-primary" onclick="chrome.tabs.create({url:'https://www.federatedalpha.com/swarms'})">Connect Wallet</button>
+          </div>
+        </div>
+        <div id="guardian-content" style="display:none;">
+          <div class="guardian-section">
+            <div class="guardian-header">
+              <span class="guardian-title">Watchlist</span>
+              <span class="guardian-count" id="guardian-watchlist-count">0 / 3</span>
+            </div>
+            <div id="guardian-watchlist"></div>
+          </div>
+          <div class="guardian-section">
+            <div class="guardian-header">
+              <span class="guardian-title">Recent Alerts</span>
+            </div>
+            <div id="guardian-alerts"></div>
+          </div>
+          <div class="guardian-section guardian-toggle-row">
+            <label for="guardianToggle">Guardian notifications</label>
+            <input type="checkbox" id="guardianToggle" checked>
           </div>
         </div>
       </div>

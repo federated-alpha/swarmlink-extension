@@ -136,7 +136,7 @@ const saveMyHives = async (hives) => {
 };
 
 // API calls
-const API_BASE = 'https://federatedalpha.com/api';
+const API_BASE = 'https://www.federatedalpha.com/api';
 
 const createSwarm = async (name, description, icon, creator) => {
   const response = await fetch(`${API_BASE}/create-swarm`, {

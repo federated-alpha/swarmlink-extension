@@ -686,6 +686,190 @@ body {
   flex-shrink: 0;
 }
 
+/* Guardian alerts in activity feed */
+.feed-alerts-section {
+  border-bottom: 2px solid var(--danger);
+  margin-bottom: 4px;
+}
+
+.feed-alerts-header {
+  background: rgba(255, 71, 87, 0.08);
+}
+
+.feed-alerts-title {
+  color: var(--danger) !important;
+}
+
+.feed-alert-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.feed-alert-item:hover {
+  background: rgba(255, 71, 87, 0.06);
+}
+
+.feed-alert-emoji {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.feed-alert-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.feed-alert-token {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.feed-alert-msg {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feed-alert-group {
+  border-bottom: 1px solid var(--border);
+}
+
+.feed-alert-group:last-child {
+  border-bottom: none;
+}
+
+.feed-alert-item--grouped {
+  cursor: pointer;
+}
+
+.feed-alert-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.feed-alert-chevron {
+  display: inline-block;
+  font-size: 8px;
+  transition: transform 0.2s;
+  margin-left: 2px;
+}
+
+.feed-alert-item--sub {
+  padding-left: 36px;
+  background: rgba(255, 71, 87, 0.03);
+  border-left: 2px solid rgba(255, 71, 87, 0.3);
+}
+
+/* Bullish (whale entry) alerts — green */
+.feed-alert-item--bullish {
+  border-left: 2px solid #22c55e;
+}
+
+.feed-alert-item--bullish.feed-alert-item--sub {
+  background: rgba(34, 197, 94, 0.03);
+  border-left-color: rgba(34, 197, 94, 0.3);
+}
+
+.feed-alert-item--bullish .feed-alert-badge {
+  background: #22c55e;
+}
+
+/* Danger (whale dump, price crash, rug) alerts — red tint */
+.feed-alert-item--danger {
+  background: rgba(255, 71, 87, 0.06);
+}
+
+.feed-alert-item--danger.feed-alert-item--sub {
+  background: rgba(255, 71, 87, 0.04);
+}
+
+/* Bullish alerts — green tint */
+.feed-alert-item--bullish {
+  background: rgba(34, 197, 94, 0.06);
+  border-left: 2px solid #22c55e;
+}
+
+.feed-alert-item--bullish.feed-alert-item--sub {
+  background: rgba(34, 197, 94, 0.04);
+  border-left-color: rgba(34, 197, 94, 0.3);
+}
+
+.feed-alert-item--bullish .feed-alert-badge {
+  background: #22c55e;
+}
+
+/* Swarm attention alerts — amber */
+.feed-alert-item--attention {
+  border-left: 2px solid #f59e0b;
+}
+
+.feed-alert-item--attention.feed-alert-item--sub {
+  background: rgba(245, 158, 11, 0.03);
+  border-left-color: rgba(245, 158, 11, 0.3);
+}
+
+.feed-alert-item--attention .feed-alert-badge {
+  background: #f59e0b;
+}
+
+.feed-watch-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--primary);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.15s;
+}
+
+.feed-watch-btn:hover {
+  background: var(--primary);
+  color: var(--bg-dark);
+}
+
+.feed-watch-btn.watched {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--bg-dark);
+  cursor: default;
+}
+
+.feed-watch-btn:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
 /* Light mode adjustments */
 [data-theme="light"] .btn-primary {
   background: var(--bg-card);
@@ -702,4 +886,137 @@ body {
 [data-theme="light"] .hive-card,
 [data-theme="light"] .invite-code-box {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Guardian Tab */
+.guardian-section {
+  margin-bottom: 12px;
+}
+
+.guardian-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.guardian-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.guardian-count {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.guardian-token {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--bg-card);
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.guardian-token-name {
+  color: var(--text-primary);
+  font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guardian-token-ca {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-family: monospace;
+  margin-left: 8px;
+}
+
+.guardian-token-remove {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  margin-left: 4px;
+  border-radius: 4px;
+}
+
+.guardian-token-remove:hover {
+  background: rgba(255, 71, 87, 0.15);
+}
+
+.guardian-alert-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--bg-card);
+  margin-bottom: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.guardian-alert-item:hover {
+  background: var(--bg-section);
+}
+
+.guardian-alert-type {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.guardian-alert-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.guardian-alert-token {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.guardian-alert-msg {
+  color: var(--text-secondary);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guardian-alert-time {
+  color: var(--text-secondary);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.guardian-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.guardian-toggle-row label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.guardian-empty {
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-align: center;
+  padding: 12px 0;
 }

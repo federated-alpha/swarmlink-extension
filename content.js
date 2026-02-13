@@ -237,11 +237,13 @@ async function getUserData() {
           activeSwarm: localResult.activeSwarm
         });
 
-        // Filter to active swarm only (if set)
+        // Filter to active swarm only — never broadcast to all
         let swarms = localResult.mySwarms || [];
-        if (localResult.activeSwarm && swarms.length > 0) {
-          const active = swarms.find(s => s.code === localResult.activeSwarm);
-          if (active) swarms = [active];
+        if (swarms.length > 0) {
+          const active = localResult.activeSwarm
+            ? swarms.find(s => s.code === localResult.activeSwarm)
+            : null;
+          swarms = active ? [active] : [swarms[0]];
         }
 
         resolve({
@@ -407,9 +409,85 @@ async function scanAndShareToken(tokenMint) {
       }
     }
 
+    // Show "+ Watch" button after successful scan
+    showWatchButton(tokenMint, tokenName, scanData.result.tokenSymbol);
+
   } catch (error) {
     console.error('SwarmLink: Scan error', error);
   }
+}
+
+// Show a "+ Watch" button (bottom-right) for adding token to Guardian watchlist
+function showWatchButton(tokenMint, tokenName, tokenSymbol) {
+  // Don't show if already present
+  if (document.getElementById('swarmlink-watch-btn')) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'swarmlink-watch-btn';
+  btn.textContent = '+ Watch';
+  btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:999999;background:#1e293b;color:#00d4ff;border:1px solid #00d4ff;padding:10px 18px;border-radius:8px;font-size:14px;font-family:system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3);transition:all 0.2s;';
+
+  btn.addEventListener('mouseenter', () => {
+    btn.style.background = '#00d4ff';
+    btn.style.color = '#1e293b';
+  });
+  btn.addEventListener('mouseleave', () => {
+    if (!btn.dataset.watching) {
+      btn.style.background = '#1e293b';
+      btn.style.color = '#00d4ff';
+    }
+  });
+
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    try {
+      const storage = await new Promise(r => chrome.storage.local.get(['wallet'], r));
+      if (!storage.wallet) {
+        showSwarmLinkNotification('SwarmLink: Connect wallet at federatedalpha.com first');
+        btn.textContent = '+ Watch';
+        btn.disabled = false;
+        return;
+      }
+
+      const data = await apiFetch(`${API_BASE}/ext-watchlist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'watch',
+          wallet: storage.wallet,
+          tokenCA: tokenMint,
+          tokenName: tokenName || null,
+          tokenSymbol: tokenSymbol || null,
+        }),
+      });
+
+      if (data.success || data.message === 'Already watching') {
+        btn.textContent = 'Watching';
+        btn.dataset.watching = 'true';
+        btn.style.background = '#059669';
+        btn.style.color = '#fff';
+        btn.style.borderColor = '#059669';
+        setTimeout(() => btn.remove(), 3000);
+      } else {
+        showSwarmLinkNotification(`SwarmLink: ${data.error || 'Could not watch token'}`);
+        btn.textContent = '+ Watch';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      showSwarmLinkNotification(`SwarmLink: ${err.message || 'Watch failed'}`);
+      btn.textContent = '+ Watch';
+      btn.disabled = false;
+    }
+  });
+
+  document.body.appendChild(btn);
+
+  // Auto-remove after 15 seconds if not clicked
+  setTimeout(() => {
+    if (btn.parentNode && !btn.dataset.watching) btn.remove();
+  }, 15000);
 }
 
 // Analyze X/Twitter sentiment
@@ -541,16 +619,22 @@ function initScanner() {
   // Only use DOM extraction here — never fall back to URL which gives pair addresses
   if (hostname.includes('dexscreener.com')) {
     // Wait for page to render, then extract real token mint from DOM
-    setTimeout(() => {
+    // Retry up to 4 times (3s, 5s, 8s, 12s) in case DexScreener loads slowly
+    let dexRetries = 0;
+    const tryExtractDex = () => {
       const tokenMint = extractTokenFromDexScreenerDOM();
-
       if (tokenMint) {
         console.log('SwarmLink: Detected token', tokenMint.slice(0, 8) + '...');
         scanAndShareToken(tokenMint);
+      } else if (dexRetries < 3) {
+        dexRetries++;
+        console.log(`SwarmLink: DexScreener DOM not ready, retry ${dexRetries}/3...`);
+        setTimeout(tryExtractDex, [2000, 3000, 4000][dexRetries - 1]);
       } else {
-        console.log('SwarmLink: Could not find token mint in DexScreener DOM (URL is likely a pair address)');
+        console.log('SwarmLink: Could not find token mint in DexScreener DOM after retries');
       }
-    }, 3000); // Wait 3s for DexScreener SPA to fully render
+    };
+    setTimeout(tryExtractDex, 3000);
 
     // Watch for URL changes (SPA navigation)
     watchNavigation(() => {

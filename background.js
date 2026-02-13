@@ -15,7 +15,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (sender.id !== chrome.runtime.id) return;
 
   // Proxy API fetches from content scripts (background uses extension origin for CORS)
+  // Only allow requests to our own API to prevent abuse if a matched site is compromised
   if (message.type === 'API_FETCH') {
+    if (!message.url || !message.url.startsWith('https://www.federatedalpha.com/api')) {
+      sendResponse({ success: false, error: 'Blocked: URL not allowed' });
+      return true;
+    }
     fetch(message.url, message.options)
       .then(r => r.json())
       .then(data => sendResponse({ success: true, data }))
@@ -127,29 +132,118 @@ function updateBadge(count) {
   }
 }
 
-// Open pump.fun when notification is clicked (ready to trade)
+// Open URL when notification is clicked
+// Guardian alerts store a full URL; swarm alerts store a tokenMint
 chrome.notifications.onClicked.addListener((notifId) => {
   chrome.storage.local.get(['notifMap'], (result) => {
     const map = result.notifMap || {};
-    const tokenMint = map[notifId];
-    if (tokenMint) {
-      chrome.tabs.create({ url: `https://pump.fun/coin/${tokenMint}` });
+    const target = map[notifId];
+    if (target) {
+      const url = target.startsWith('http') ? target : `https://pump.fun/coin/${target}`;
+      chrome.tabs.create({ url });
       delete map[notifId];
       chrome.storage.local.set({ notifMap: map });
     }
   });
 });
 
-// Initialize badge on install
+// Initialize badge + guardian alarm on install
 chrome.runtime.onInstalled.addListener(async () => {
   const result = await chrome.storage.local.get(['mySwarms']);
   const swarms = result.mySwarms || [];
   updateBadge(swarms.length);
+  chrome.alarms.create('guardianPoll', { periodInMinutes: 1 });
 });
 
-// Initialize badge on startup
+// Initialize badge + guardian alarm on startup
 chrome.runtime.onStartup.addListener(async () => {
   const result = await chrome.storage.local.get(['mySwarms']);
   const swarms = result.mySwarms || [];
   updateBadge(swarms.length);
+  chrome.alarms.create('guardianPoll', { periodInMinutes: 1 });
 });
+
+// ─── Guardian Alert Polling ───
+
+const GUARDIAN_API = 'https://www.federatedalpha.com/api';
+let guardianPolling = false; // mutex to prevent concurrent polls
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'guardianPoll') {
+    pollGuardianAlerts();
+  }
+});
+
+async function pollGuardianAlerts() {
+  if (guardianPolling) return;
+  guardianPolling = true;
+
+  try {
+    const storage = await chrome.storage.local.get(['wallet', 'guardianCursor', 'guardianEnabled']);
+    if (!storage.wallet) return;
+    if (storage.guardianEnabled === false) return;
+
+    const since = storage.guardianCursor || 0;
+    const resp = await fetch(
+      `${GUARDIAN_API}/ext-alerts?wallet=${encodeURIComponent(storage.wallet)}&since=${since}`
+    );
+    if (!resp.ok) return;
+
+    let data;
+    try { data = await resp.json(); } catch { return; }
+    if (!data.success || !data.alerts || data.alerts.length === 0) return;
+
+    // Show browser notification for each alert
+    const notifEntries = {};
+    for (const alert of data.alerts) {
+      const tokenLabel = alert.tokenSymbol || alert.tokenCA?.slice(0, 8) + '...';
+
+      const typeLabels = {
+        price_crash: 'Price Crash',
+        whale_entry: 'Whale Entry',
+        whale_dump: 'Whale Dump',
+        rug_alert: 'Rug Alert',
+        cluster_high: 'Cluster (HIGH)',
+        cluster_medium: 'Cluster (MED)',
+      };
+      const typeLabel = typeLabels[alert.type] || alert.type;
+
+      const notifId = `guardian-${alert.id || Date.now()}`;
+
+      chrome.notifications.create(notifId, {
+        type: 'basic',
+        iconUrl: chrome.runtime.getURL('icons/icon128.png'),
+        title: `${tokenLabel} — ${typeLabel}`,
+        message: alert.message || 'Guardian alert',
+        priority: alert.severity === 'high' ? 2 : 1,
+      });
+
+      notifEntries[notifId] = alert.url || `https://dexscreener.com/solana/${alert.tokenCA}`;
+    }
+
+    // Batch storage updates: alerts + cursor + notifMap
+    const existing = await chrome.storage.local.get(['guardianAlerts', 'notifMap', 'guardianUnread']);
+    const mergedAlerts = [...data.alerts, ...(existing.guardianAlerts || [])].slice(0, 50);
+    const mergedMap = { ...(existing.notifMap || {}), ...notifEntries };
+    const unread = (existing.guardianUnread || 0) + data.alerts.length;
+
+    const updates = {
+      guardianAlerts: mergedAlerts,
+      notifMap: mergedMap,
+      guardianUnread: unread,
+    };
+    if (data.cursor) updates.guardianCursor = data.cursor;
+
+    await chrome.storage.local.set(updates);
+
+    // Show unread count on badge (red)
+    if (unread > 0) {
+      chrome.action.setBadgeText({ text: unread.toString() });
+      chrome.action.setBadgeBackgroundColor({ color: '#ef4444' });
+    }
+  } catch (err) {
+    console.error('Guardian poll error:', err.message);
+  } finally {
+    guardianPolling = false;
+  }
+}
